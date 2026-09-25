@@ -10,6 +10,7 @@ import com.duaratrust.duaratrust.repository.GroupRepository;
 import com.duaratrust.duaratrust.repository.WithdrawalRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +36,10 @@ public class WithdrawalService {
         wr.setStatus("PENDING");
         wr.setCreatedAt(LocalDateTime.now());
         return withdrawalRequestRepository.save(wr);
+    }
+    public WithdrawalRequest getWithdrawal(Long id) {
+        return withdrawalRequestRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Withdrawal request not found"));
     }
 
     public WithdrawalRequest submitApproval(Long withdrawalId, ApproveWithdrawalRequest request) {
@@ -75,6 +80,9 @@ public class WithdrawalService {
 
         return wr;
 
+    }
+    public List<WithdrawalRequest> getAll() {
+        return withdrawalRequestRepository.findAll();
     }
 
 

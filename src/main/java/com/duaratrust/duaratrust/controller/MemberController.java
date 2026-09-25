@@ -1,6 +1,7 @@
 package com.duaratrust.duaratrust.controller;
 
 import com.duaratrust.duaratrust.dto.CreateGroupRequest;
+import com.duaratrust.duaratrust.dto.CreateMemberRequest;
 import com.duaratrust.duaratrust.entity.Member;
 import com.duaratrust.duaratrust.service.MemberService;
 import jakarta.validation.Valid;
@@ -18,8 +19,10 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping
-    public Member createMember(@Valid @RequestBody CreateGroupRequest request) {
-        return memberService.createMember(request);
+    public Member createMember(@Valid @RequestBody CreateMemberRequest request) {
+        {
+            return memberService.createMember(request);
+        }
     }
 
 }
