@@ -1,0 +1,41 @@
+sequenceDiagram
+    participant M as Member (client)
+    participant C as WithdrawalController
+    participant S as WithdrawalService
+    participant WR as WithdrawalRequestRepository
+    participant AR as ApprovalRepository
+    participant GR as GroupRepository
+
+    M->>C: POST /api/withdrawals
+    C->>S: createWithdrawal(request)
+    S->>WR: save(status=PENDING)
+    WR-->>S: WithdrawalRequest(id)
+    S-->>C: WithdrawalRequest
+    C-->>M: 200 OK, status=PENDING
+
+    M->>C: POST /api/withdrawals/{id}/approvals (Official A, APPROVE)
+    C->>S: submitApproval(id, request)
+    S->>AR: findByWithdrawalRequestIdAndMemberId
+    AR-->>S: none found
+    S->>AR: save(Approval A)
+    S->>AR: findByWithdrawalRequestId(id)
+    AR-->>S: [Approval A]
+    S->>GR: findById(groupId)
+    GR-->>S: Group(approvalThreshold=2)
+    Note over S: approveCount (1) < threshold (2)
+    S-->>C: WithdrawalRequest(status=PENDING)
+    C-->>M: 200 OK, status=PENDING
+
+    M->>C: POST /api/withdrawals/{id}/approvals (Official B, APPROVE)
+    C->>S: submitApproval(id, request)
+    S->>AR: findByWithdrawalRequestIdAndMemberId
+    AR-->>S: none found
+    S->>AR: save(Approval B)
+    S->>AR: findByWithdrawalRequestId(id)
+    AR-->>S: [Approval A, Approval B]
+    S->>GR: findById(groupId)
+    GR-->>S: Group(approvalThreshold=2)
+    Note over S: approveCount (2) >= threshold (2)
+    S->>WR: save(status=APPROVED)
+    S-->>C: WithdrawalRequest(status=APPROVED)
+    C-->>M: 200 OK, status=APPROVED
