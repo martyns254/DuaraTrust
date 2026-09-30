@@ -42,4 +42,4 @@ Java 17 · Spring Boot · Spring Security · JWT · PostgreSQL · Maven · GitHu
 
 ## Author
 
-Martins Kosgei — [github.com/martyns254](https://github.com/martyns254)
+Martin Kosgei — [github.com/martyns254](https://github.com/martyns254)
